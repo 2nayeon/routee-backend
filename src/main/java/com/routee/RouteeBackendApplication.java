@@ -1,4 +1,4 @@
-package com.routee.backend;
+package com.routee;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
