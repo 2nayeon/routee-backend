@@ -19,11 +19,11 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- ===========================================================
 CREATE TABLE users (
     user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    user_name VARCHAR(50) NOT NULL UNIQUE,
+    username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     nickname VARCHAR(50) NOT NULL,
-    role VARCHAR(20) DEFAULT 'ROLE_USER',
+    role VARCHAR(20) NOT NULL DEFAULT 'ROLE_USER',
     created_at DATETIME NOT NULL,
     updated_at DATETIME NOT NULL
 );
