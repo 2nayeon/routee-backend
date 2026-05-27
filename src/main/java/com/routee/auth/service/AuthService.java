@@ -1,5 +1,7 @@
 package com.routee.auth.service;
 
+import com.routee.auth.dto.UserLoginRequestDto;
+import com.routee.auth.dto.UserLoginResponseDto;
 import com.routee.auth.dto.UserSignupRequestDto;
 import com.routee.auth.entity.Role;
 import com.routee.auth.entity.User;
@@ -34,5 +36,20 @@ public class AuthService {
                 .build();
 
         userRepository.save(user);
+    }
+
+    public UserLoginResponseDto login(UserLoginRequestDto requestDto) {
+        User user = userRepository.findByUsername(requestDto.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이디입니다."));
+
+        if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치한지 않습니다.");
+        }
+
+        return UserLoginResponseDto.builder()
+                .userId(user.getUserId())
+                .username(user.getUsername())
+                .nickname(user.getNickname())
+                .build();
     }
 }
