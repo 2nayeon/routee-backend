@@ -33,6 +33,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column
+    @Builder.Default
     private Role role = Role.ROLE_USER;
 
     @CreationTimestamp
