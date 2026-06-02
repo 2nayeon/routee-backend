@@ -33,12 +33,12 @@ CREATE TABLE users (
 -- ===========================================================
 CREATE TABLE places (
     place_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    google_place_id VARCHAR(255) NOT NULL UNIQUE,
+    naver_place_id BIGINT NOT NULL UNIQUE,
     place_name VARCHAR(150) NOT NULL,
     address VARCHAR(255),
     latitude DOUBLE NOT NULL,
     longitude DOUBLE NOT NULL,
-    category VARCHAR(50)
+    category VARCHAR(100)
 );
 
 -- ===========================================================
