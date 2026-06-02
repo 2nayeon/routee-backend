@@ -1,4 +1,4 @@
-package com.routee.config;
+package com.routee.global.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

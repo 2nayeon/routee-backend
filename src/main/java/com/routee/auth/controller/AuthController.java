@@ -27,9 +27,4 @@ public class AuthController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleException(IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
 }
