@@ -6,6 +6,7 @@ import com.routee.auth.dto.UserSignupRequestDto;
 import com.routee.auth.entity.Role;
 import com.routee.auth.entity.User;
 import com.routee.auth.repository.UserRepository;
+import com.routee.auth.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     @Transactional
     public void signup(UserSignupRequestDto requestDto){
@@ -46,10 +48,13 @@ public class AuthService {
             throw new IllegalArgumentException("비밀번호가 일치한지 않습니다.");
         }
 
+        String token = jwtUtil.createToken(user.getUsername());
+
         return UserLoginResponseDto.builder()
                 .userId(user.getUserId())
                 .username(user.getUsername())
                 .nickname(user.getNickname())
+                .token(token)
                 .build();
     }
 }
