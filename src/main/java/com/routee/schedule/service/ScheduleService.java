@@ -2,9 +2,15 @@ package com.routee.schedule.service;
 
 import com.routee.auth.entity.User;
 import com.routee.auth.repository.UserRepository;
+import com.routee.schedule.dto.PlaceRequestDto;
 import com.routee.schedule.dto.ScheduleRequestDto;
+import com.routee.schedule.dto.TmpPlaceResponseDto;
+import com.routee.schedule.entity.Place;
 import com.routee.schedule.entity.Schedule;
+import com.routee.schedule.entity.ScheduleTmpPlace;
+import com.routee.schedule.repository.PlaceRepository;
 import com.routee.schedule.repository.ScheduleRepository;
+import com.routee.schedule.repository.ScheduleTmpPlaceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +21,9 @@ public class ScheduleService {
 
     private final UserRepository userRepository;
     private final ScheduleRepository scheduleRepository;
+    private final PlaceRepository placeRepository;
+    private final ScheduleTmpPlaceRepository scheduleTmpPlaceRepository;
+
 
     @Transactional
     public Long createSchedule(Long userId, ScheduleRequestDto requestDto) {
@@ -34,5 +43,32 @@ public class ScheduleService {
     }
 
 
+    @Transactional
+    public TmpPlaceResponseDto addTmpPlace(Long scheduleId, PlaceRequestDto requestDto) {
+        Place place = placeRepository.findByNaverPlaceId(requestDto.getNaverPlaceId())
+                .orElseGet(() -> {
+                    Place newPlace = Place.builder()
+                            .naverPlaceId(requestDto.getNaverPlaceId())
+                            .placeName(requestDto.getPlaceName())
+                            .address(requestDto.getAddress())
+                            .latitude(requestDto.getLatitude())
+                            .longitude(requestDto.getLongitude())
+                            .category(requestDto.getCategory())
+                            .build();
 
+                    return placeRepository.save(newPlace);
+                });
+
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 일정입니다."));
+
+        ScheduleTmpPlace tmpPlace = ScheduleTmpPlace.builder()
+                .schedule(schedule)
+                .place(place)
+                .build();
+
+        ScheduleTmpPlace savedTmpPlace = scheduleTmpPlaceRepository.save(tmpPlace);
+
+        return new TmpPlaceResponseDto(savedTmpPlace);
+    }
 }
