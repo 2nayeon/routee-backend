@@ -2,15 +2,15 @@ package com.routee.schedule.service;
 
 import com.routee.auth.entity.User;
 import com.routee.auth.repository.UserRepository;
-import com.routee.schedule.dto.PlaceRequestDto;
-import com.routee.schedule.dto.ScheduleRequestDto;
-import com.routee.schedule.dto.TmpPlaceResponseDto;
+import com.routee.schedule.dto.*;
 import com.routee.schedule.entity.Place;
 import com.routee.schedule.entity.Schedule;
 import com.routee.schedule.entity.ScheduleTmpPlace;
+import com.routee.schedule.entity.TimelineItem;
 import com.routee.schedule.repository.PlaceRepository;
 import com.routee.schedule.repository.ScheduleRepository;
 import com.routee.schedule.repository.ScheduleTmpPlaceRepository;
+import com.routee.schedule.repository.TimelineItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +23,7 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final PlaceRepository placeRepository;
     private final ScheduleTmpPlaceRepository scheduleTmpPlaceRepository;
-
+    private final TimelineItemRepository timelineItemRepository;
 
     @Transactional
     public Long createSchedule(Long userId, ScheduleRequestDto requestDto) {
@@ -70,5 +70,25 @@ public class ScheduleService {
         ScheduleTmpPlace savedTmpPlace = scheduleTmpPlaceRepository.save(tmpPlace);
 
         return new TmpPlaceResponseDto(savedTmpPlace);
+    }
+
+
+    @Transactional
+    public TimelineItemResponseDto addTimelineItem(Long scheduleId, TimelineItemRequestDto requestDto) {
+        ScheduleTmpPlace tmpPlace = scheduleTmpPlaceRepository.findById(requestDto.getTmpPlaceId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 임시 장소입니다. id=" + requestDto.getTmpPlaceId()));
+
+        TimelineItem timelineItem = TimelineItem.builder()
+                .schedule(tmpPlace.getSchedule())
+                .place(tmpPlace.getPlace())
+                .visitOrder(requestDto.getVisitOrder())
+                .visitTime(requestDto.getVisitTime())
+                .visitDate(requestDto.getVisitDate())
+                .build();
+
+        TimelineItem savedTimelineItem = timelineItemRepository.save(timelineItem);
+        scheduleTmpPlaceRepository.delete(tmpPlace);
+
+        return new TimelineItemResponseDto(savedTimelineItem);
     }
 }

@@ -1,9 +1,8 @@
 package com.routee.schedule.controller;
 
-import com.routee.schedule.dto.PlaceRequestDto;
-import com.routee.schedule.dto.ScheduleRequestDto;
-import com.routee.schedule.dto.TmpPlaceResponseDto;
+import com.routee.schedule.dto.*;
 import com.routee.schedule.entity.Schedule;
+import com.routee.schedule.entity.TimelineItem;
 import com.routee.schedule.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +28,14 @@ public class ScheduleController {
             @PathVariable(name = "scheduleId") Long scheduleId,
             @RequestBody PlaceRequestDto requestDto) {
         TmpPlaceResponseDto responseDto = scheduleService.addTmpPlace(scheduleId, requestDto);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @PostMapping("{scheduleId}/timeline-items")
+    public ResponseEntity<TimelineItemResponseDto> addTimelineItem(
+            @PathVariable(name = "scheduleId") Long scheduleId,
+            @RequestBody TimelineItemRequestDto requestDto) {
+        TimelineItemResponseDto responseDto = scheduleService.addTimelineItem(scheduleId, requestDto);
         return ResponseEntity.ok(responseDto);
     }
 }
