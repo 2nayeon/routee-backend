@@ -5,6 +5,7 @@ USE routeedb;
 -- ===========================================================
 SET FOREIGN_KEY_CHECKS = 0;
 
+DROP TABLE IF EXISTS schedule_tmp_places;
 DROP TABLE IF EXISTS timeline_items;
 DROP TABLE IF EXISTS schedules;
 DROP TABLE IF EXISTS folder_places;
@@ -33,12 +34,12 @@ CREATE TABLE users (
 -- ===========================================================
 CREATE TABLE places (
     place_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    google_place_id VARCHAR(255) NOT NULL UNIQUE,
+    naver_place_id BIGINT NOT NULL UNIQUE,
     place_name VARCHAR(150) NOT NULL,
     address VARCHAR(255),
     latitude DOUBLE NOT NULL,
     longitude DOUBLE NOT NULL,
-    category VARCHAR(50)
+    category VARCHAR(100)
 );
 
 -- ===========================================================
@@ -90,4 +91,17 @@ CREATE TABLE timeline_items (
     visit_date DATE NOT NULL,
     FOREIGN KEY (schedule_id) REFERENCES schedules(schedule_id) ON DELETE CASCADE,
     FOREIGN KEY (place_id) REFERENCES places(place_id) ON DELETE CASCADE
+);
+
+-- ===========================================================
+-- 7. 일정별 가고 싶은 장소(임시 보관함) 매핑 테이블
+-- ===========================================================
+CREATE TABLE schedule_tmp_places (
+    tmp_place_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    schedule_id BIGINT NOT NULL,
+    place_id BIGINT NOT NULL,
+    created_at DATETIME NOT NULL,
+    FOREIGN KEY (schedule_id) REFERENCES schedules(schedule_id) ON DELETE CASCADE,
+    FOREIGN KEY (place_id) REFERENCES places(place_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_schedule_place (schedule_id, place_id)
 );
