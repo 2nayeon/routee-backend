@@ -19,25 +19,27 @@ public class User {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "username", nullable = false, unique = true)
+    @Column(name = "username", length = 50, nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false)
+    @Column(length = 255, nullable = true)
     private String password;
 
-    @Column(nullable = false, unique = true)
+    @Column(length = 100, nullable = false, unique = true)
     private String email;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String nickname;
+    @Builder.Default
+    private Provider provider = Provider.LOCAL;
 
     @Enumerated(EnumType.STRING)
-    @Column
+    @Column(nullable = false)
     @Builder.Default
     private Role role = Role.ROLE_USER;
 
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp

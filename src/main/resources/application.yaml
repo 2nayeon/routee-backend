@@ -1,4 +1,7 @@
 spring:
+  profiles:
+    include: secret
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/routeedb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
@@ -13,10 +16,19 @@ spring:
         format_sql: true
         show_sql: true
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            scope:
+              - profile
+              - email
+
 jwt:
-  secret: ${JWT_SECRET}
   expiration: 3600000
 
-google:
-  api:
-    key: ${GOOGLE_API_KEY}
+naver:
+  maps:
+    client-id: ${NAVER_MAPS_CLIENT_ID}
+    client-secret: ${NAVER_MAPS_CLIENT_SECRET}

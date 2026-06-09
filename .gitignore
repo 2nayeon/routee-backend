@@ -2,6 +2,7 @@
 # 1. 보안 및 로컬 환경 설정 파일
 # -------------------------------------------------------------------------
 src/main/resources/application-*.yml
+src/main/resources/application-*.yaml
 src/main/resources/application-*.properties
 
 # -------------------------------------------------------------------------
