@@ -3,6 +3,7 @@ package com.routee.auth.service;
 import com.routee.auth.dto.UserLoginRequestDto;
 import com.routee.auth.dto.UserLoginResponseDto;
 import com.routee.auth.dto.UserSignupRequestDto;
+import com.routee.auth.entity.Provider;
 import com.routee.auth.entity.Role;
 import com.routee.auth.entity.User;
 import com.routee.auth.repository.UserRepository;
@@ -34,7 +35,7 @@ public class AuthService {
                 .username(requestDto.getUsername())
                 .password(encodedPassword)
                 .email(requestDto.getEmail())
-                .nickname(requestDto.getNickname())
+                .provider(Provider.LOCAL)
                 .build();
 
         userRepository.save(user);
@@ -53,7 +54,6 @@ public class AuthService {
         return UserLoginResponseDto.builder()
                 .userId(user.getUserId())
                 .username(user.getUsername())
-                .nickname(user.getNickname())
                 .token(token)
                 .build();
     }
